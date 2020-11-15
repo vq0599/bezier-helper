@@ -30,12 +30,12 @@ jobs:
       - name: Run a multi-line script
         run: |
           git pull
-          git branch -b docs-branch
+          git checkout -b docs-branch
           yarn install
           yarn generate
           git add -A
           git commit -m 'Update docs'
           git push -f origin docs-branch:gh-pages
           git checkout master
-          git branch -D docs-branch
+          git checkout -D docs-branch
           
