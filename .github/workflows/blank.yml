@@ -31,7 +31,6 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          git branch -d gh-pages
           git checkout -b gh-pages
           yarn install
           yarn generate
