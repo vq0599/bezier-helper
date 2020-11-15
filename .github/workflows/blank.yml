@@ -31,9 +31,8 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          pwd
-          git remote -v
-          git checkout gh-pages
+          git branch -d gh-pages
+          git checkout -b gh-pages
           yarn install
           yarn generate
           git push -f
