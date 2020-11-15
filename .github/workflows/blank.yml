@@ -29,12 +29,8 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
           git pull
-          git branch 
-          git checkout -b gh-pages
           yarn install
           yarn generate
-          git push --set-upstream origin gh-pages
+          git push origin gh-pages -f
           
