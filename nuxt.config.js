@@ -37,5 +37,9 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
+  },
+  // Generate Configuration (https://go.nuxtjs.dev/config-build)
+  generate: {
+    dir: 'docs'
   }
 }
