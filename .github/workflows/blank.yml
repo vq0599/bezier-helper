@@ -34,12 +34,12 @@ jobs:
           yarn generate
           git add -A
           git commit -m 'Update docs'
-    # Runs a set of commands using the runners shell
-    - name: GitHub Push
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
-        force: true
+      # Runs a set of commands using the runners shell
+      - name: GitHub Push
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          force: true
 
           
