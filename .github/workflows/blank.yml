@@ -36,5 +36,5 @@ jobs:
           git checkout -b gh-pages
           yarn install
           yarn generate
-          git push -f
+          git push --set-upstream origin gh-pages
           
