@@ -6,14 +6,16 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue"
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "eslint-config-vqzfss-vue": "^0.0.4",
     "nuxt": "^2.14.6"
   },
   "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-vqzfss-vue": "^0.0.4",
     "sass": "^1.29.0",
     "sass-loader": "^10.0.5"
   }

@@ -1,5 +1,10 @@
 <template>
-  <input type="text" v-model="localValue" @blur="onBlur" maxlength="4">
+  <input
+    v-model="localValue"
+    type="text"
+    maxlength="4"
+    @blur="onBlur"
+  >
 </template>
 
 <script>
@@ -9,7 +14,10 @@ export default {
     event: 'input',
   },
   props: {
-    value: Number
+    value: {
+      type: Number,
+      default: 0
+    }
   },
   data() {
     return {

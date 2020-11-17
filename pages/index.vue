@@ -4,23 +4,45 @@
       <span>👇️&nbsp;&nbsp;{{ tips[step] }}</span>
     </div>
     <div class="main">
-       <div class="container">
-        <canvas @mousedown="onMouseDown" ref="canvas" class="canvas" width="800" height="500"></canvas>
+      <div class="container">
+        <canvas
+          ref="canvas"
+          class="canvas"
+          width="800"
+          height="500"
+          @mousedown="onMouseDown"
+        />
         <template v-for="p in pointerList">
           <button
-            :key="p.key" v-if="p.visible"
+            v-if="p.visible"
+            :key="p.key"
             :style="generatePointerStyle(p)"
             :class="['pointer', `pointer-${p.key}`, { active: p.active }]"
             @mousedown="onAddDragEvent($event, p.key)"
-          ></button>
+          />
         </template>
       </div>
       <div class="form">
-        <div class="form-item" v-for="p in pointerList" :key="p.key">
+        <div
+          v-for="p in pointerList"
+          :key="p.key"
+          class="form-item"
+        >
           <span>{{ poiners_name[p.key] }}：</span>
-          <NumberInput :disabled="!p.visible" :value="$data[p.key].x" @input="onInput($event, p.key, 'x')" />
-          <NumberInput :disabled="!p.visible" :value="$data[p.key].y" @input="onInput($event, p.key, 'y')"/>
-          <span class="form-item-tip" v-if="!p.visible">(未绘制)</span>
+          <NumberInput
+            :disabled="!p.visible"
+            :value="$data[p.key].x"
+            @input="onInput($event, p.key, 'x')"
+          />
+          <NumberInput
+            :disabled="!p.visible"
+            :value="$data[p.key].y"
+            @input="onInput($event, p.key, 'y')"
+          />
+          <span
+            v-if="!p.visible"
+            class="form-item-tip"
+          >(未绘制)</span>
         </div>
       </div>
     </div>
@@ -118,7 +140,7 @@ export default {
     },
     draw() {
       this.clearRect()
-      const { ctx, start, end, ctrl1, ctrl2 } = this
+      const { start, end, ctrl1, ctrl2 } = this
       if (this.end.visible) {
         this.drawLine(start, end, 3, 'rgba(255, 165, 0, .2)')
       }
