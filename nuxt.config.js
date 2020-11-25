@@ -13,7 +13,13 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
+    script: [
+      {
+        src: 'https://hm.baidu.com/hm.js?5e39d7199342987d1b5980b45bea0815',
+        defer: true
+      }
+    ],
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
