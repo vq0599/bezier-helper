@@ -8,7 +8,7 @@
         <canvas
           ref="canvas"
           class="canvas"
-          width="800"
+          width="820"
           height="500"
           @mousedown="onMouseDown"
         />
@@ -49,7 +49,16 @@
   </div>
 </template>
 <script>
-const POINTER_RADIUS = 5
+import { drawBackground } from '../utils/draw'
+import {
+  LINE_COLOR,
+  TANGENT_COLOR,
+  POINTER_RADIUS,
+  CURVE_COLOR,
+  CURVE_WIDTH,
+  LINE_WIDTH,
+  TANGENT_WIDTH,
+} from '../utils/constants'
 
 const tips = [
   '请点击绘制起点',
@@ -90,6 +99,9 @@ export default {
     ctx() {
       return this.$canvas.getContext('2d')
     }
+  },
+  mounted() {
+    drawBackground(this.$canvas)
   },
   methods: {
     generatePointerStyle(p) {
@@ -134,22 +146,24 @@ export default {
       ctx.beginPath();
       ctx.moveTo(start.x, start.y);
       ctx.bezierCurveTo(ctrl1.x, ctrl1.y, ctrl2.x, ctrl2.y, end.x, end.y);
-      ctx.lineWidth = 3;
+      ctx.lineWidth = CURVE_WIDTH;
+      ctx.strokeStyle = CURVE_COLOR
       ctx.stroke();
       ctx.closePath();
     },
     draw() {
       this.clearRect()
+      drawBackground(this.$canvas)
       const { start, end, ctrl1, ctrl2 } = this
       if (this.end.visible) {
-        this.drawLine(start, end, 3, 'rgba(255, 165, 0, .2)')
+        this.drawLine(start, end, LINE_WIDTH, LINE_COLOR)
       }
       if (this.ctrl1.visible) {
-        this.drawLine(start, ctrl1, 1, '#333')
+        this.drawLine(start, ctrl1, TANGENT_WIDTH, TANGENT_COLOR)
         this.drawBezierCurve()
       }
       if (this.ctrl2.visible) {
-        this.drawLine(end, ctrl2, 1, '#333')
+        this.drawLine(end, ctrl2, TANGENT_WIDTH, TANGENT_COLOR)
       }
     },
     clearRect() {
@@ -199,7 +213,6 @@ export default {
   display: inline-block;
   position: relative;
   overflow: hidden;
-  outline: 1px solid #ccc;
   margin-right: 20px;
 }
 .canvas {
@@ -222,10 +235,10 @@ export default {
     background: #fff;
   }
   &-ctrl1 {
-    background: #f08;
+    background: #cc3834;
   }
   &-ctrl2 {
-    background: #0ab;
+    background: #62a6ae;
   }
 }
 
