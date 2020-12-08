@@ -1,6 +1,16 @@
 import { hexToRgb } from "./tool"
 
 /**
+ * 输入画布区域宽度
+ */
+export const CANVAS_WIDTH = 780
+
+/**
+ * 输入画布区域高度
+ */
+export const CANVAS_HEIGHT = 460
+
+/**
  * canvas边距（用于画坐标系）
  */
 export const SPACING = 40
@@ -14,8 +24,6 @@ export const UNIT_WIDTH = 40
  * 点半径
  */
 export const POINTER_RADIUS = 8
-
-
 
 /**
  * 背景条纹颜色

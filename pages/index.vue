@@ -6,21 +6,28 @@
     <div class="main">
       <div class="container">
         <canvas
-          ref="canvas"
-          class="canvas"
-          width="820"
-          height="500"
-          @mousedown="onMouseDown"
+          ref="b-canvas"
+          :width="width + spacing"
+          :height="height + spacing"
+          class="coordinate"
         />
-        <template v-for="p in pointerList">
-          <button
-            v-if="p.visible"
-            :key="p.key"
-            :style="generatePointerStyle(p)"
-            :class="['pointer', `pointer-${p.key}`, { active: p.active }]"
-            @mousedown="onAddDragEvent($event, p.key)"
+        <div class="content">
+          <canvas
+            ref="c-canvas"
+            :width="width"
+            :height="height"
+            @mousedown="onMouseDown"
           />
-        </template>
+          <template v-for="p in pointerList">
+            <button
+              v-if="p.visible"
+              :key="p.key"
+              :style="generatePointerStyle(p)"
+              :class="['pointer', `pointer-${p.key}`, { active: p.active }]"
+              @mousedown="onAddDragEvent($event, p.key)"
+            />
+          </template>
+        </div>
       </div>
       <div class="form">
         <div
@@ -49,15 +56,16 @@
   </div>
 </template>
 <script>
-import { drawBackground } from '../utils/draw'
+import { drawCoordinate, drawStripe, drawLine, drawBezierCurve } from '../utils/draw'
 import {
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
   LINE_COLOR,
   TANGENT_COLOR,
   POINTER_RADIUS,
-  CURVE_COLOR,
-  CURVE_WIDTH,
   LINE_WIDTH,
   TANGENT_WIDTH,
+  SPACING,
 } from '../utils/constants'
 
 const tips = [
@@ -82,10 +90,12 @@ export default {
       end: { x: 0, y: 0, visible: false, active: false },
       ctrl1: { x: 0, y: 0, visible: false, active: false },
       ctrl2: { x: 0, y: 0, visible: false, active: false },
-      PR: POINTER_RADIUS,
       tips,
       poiners_name,
       step: 0,
+      width: CANVAS_WIDTH,
+      height: CANVAS_HEIGHT,
+      spacing: SPACING
     }
   },
   computed: {
@@ -93,28 +103,31 @@ export default {
       const { start, end, ctrl1, ctrl2 } = this
       return Object.entries({ start, end, ctrl1, ctrl2 }).map(([key, p]) => ({ key, ...p }))
     },
-    $canvas() {
-      return this.$refs.canvas
+    $c() {
+      return this.$refs['c-canvas']
+    },
+    $b() {
+      return this.$refs['b-canvas']
     },
     ctx() {
-      return this.$canvas.getContext('2d')
+      return this.$c.getContext('2d')
     }
   },
   mounted() {
-    drawBackground(this.$canvas)
+    drawStripe(this.$b)
+    drawCoordinate(this.$b)
   },
   methods: {
     generatePointerStyle(p) {
       if (!p) return
-      const { PR } = this
       return {
-        left: `${p.x - PR}px`,
-        top: `${p.y - PR}px`,
-        width: `${PR * 2 + 1}px`,
-        height: `${PR * 2 + 1}px`,
+        left: `${p.x - POINTER_RADIUS}px`,
+        top: `${p.y - POINTER_RADIUS}px`,
+        width: `${POINTER_RADIUS * 2 + 1}px`,
+        height: `${POINTER_RADIUS * 2 + 1}px`,
       }
     },
-    drawPoiner({ x, y }) {
+    renderControlPoiner({ x, y }) {
       for (let i = 0; i < this.pointerList.length; i++) {
         const p = this.pointerList[i];
         if (p.visible) continue;
@@ -125,50 +138,31 @@ export default {
         break
       }
     },
-    drawLine(p1, p2, width, color) {
-      const { ctx } = this
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.lineWidth = width;
-      ctx.strokeStyle = color;
-      ctx.stroke();
-      ctx.closePath();
-    },
-    drawBezierCurve() {
-      const { ctx, start, end, ctrl1: originC1, ctrl2: originC2 } = this
-
-      // 始末点作为控制点的默认值
-      const ctrl1 = originC1.visible ? originC1 : start
-      const ctrl2 = originC2.visible ? originC2 : end
-
-      //画贝塞尔曲线
-      ctx.beginPath();
-      ctx.moveTo(start.x, start.y);
-      ctx.bezierCurveTo(ctrl1.x, ctrl1.y, ctrl2.x, ctrl2.y, end.x, end.y);
-      ctx.lineWidth = CURVE_WIDTH;
-      ctx.strokeStyle = CURVE_COLOR
-      ctx.stroke();
-      ctx.closePath();
-    },
     draw() {
-      this.clearRect()
-      drawBackground(this.$canvas)
-      const { start, end, ctrl1, ctrl2 } = this
-      if (this.end.visible) {
-        this.drawLine(start, end, LINE_WIDTH, LINE_COLOR)
+      const { start, end, ctrl1, ctrl2, ctx, $c } = this
+
+      // 清空内容画布
+      ctx.clearRect(0, 0, $c.width, $c.height)
+
+      if (end.visible) {
+        // 画始末点连接性
+        drawLine(ctx, start, end, LINE_WIDTH, LINE_COLOR)
       }
-      if (this.ctrl1.visible) {
-        this.drawLine(start, ctrl1, TANGENT_WIDTH, TANGENT_COLOR)
-        this.drawBezierCurve()
+
+      if (ctrl1.visible) {
+        // 画第一个控制点的切线
+        drawLine(ctx, start, ctrl1, TANGENT_WIDTH, TANGENT_COLOR)
+
+        if (ctrl2.visible) {
+          // 画第二个控制点的切线
+          drawLine(ctx, end, ctrl2, TANGENT_WIDTH, TANGENT_COLOR)
+          // 画贝塞尔曲线
+          drawBezierCurve(ctx, start, ctrl1, ctrl2, end)
+        } else {
+          // 如果没有第二个控制点，则以终点作为第二个控制点画贝塞尔曲线
+          drawBezierCurve(ctx, start, ctrl1, end, end)
+        }
       }
-      if (this.ctrl2.visible) {
-        this.drawLine(end, ctrl2, TANGENT_WIDTH, TANGENT_COLOR)
-      }
-    },
-    clearRect() {
-      const { ctx, $canvas } = this
-      ctx.clearRect(0, 0, $canvas.width, $canvas.height)
     },
     onInput(value, key, direction) {
       this[key][direction] = value
@@ -176,7 +170,7 @@ export default {
     },
     onMouseDown(ev) {
       const { offsetX: x, offsetY: y } = ev
-      this.drawPoiner({ x, y })
+      this.renderControlPoiner({ x, y })
       this.draw()
     },
     onAddDragEvent(ev, key) {
@@ -212,8 +206,13 @@ export default {
 .container {
   display: inline-block;
   position: relative;
-  overflow: hidden;
   margin-right: 20px;
+  .content {
+    display: flex;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+  }
 }
 .canvas {
   display: flex;
