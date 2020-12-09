@@ -8,7 +8,7 @@ export const CANVAS_WIDTH = 780
 /**
  * 输入画布区域高度
  */
-export const CANVAS_HEIGHT = 460
+export const CANVAS_HEIGHT = 480
 
 /**
  * canvas边距（用于画坐标系）

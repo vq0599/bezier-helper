@@ -8,7 +8,7 @@
         <canvas
           ref="b-canvas"
           :width="width + spacing"
-          :height="height + spacing"
+          :height="height + spacing + 20"
           class="coordinate"
         />
         <div class="content">
@@ -67,6 +67,7 @@ import {
   TANGENT_WIDTH,
   SPACING,
 } from '../utils/constants'
+import { fixNumberInRange } from '../utils/tool'
 
 const tips = [
   '请点击绘制起点',
@@ -103,9 +104,15 @@ export default {
       const { start, end, ctrl1, ctrl2 } = this
       return Object.entries({ start, end, ctrl1, ctrl2 }).map(([key, p]) => ({ key, ...p }))
     },
+    /**
+     * @returns {HTMLCanvasElement}
+     */
     $c() {
       return this.$refs['c-canvas']
     },
+    /**
+     * @returns {HTMLCanvasElement}
+     */
     $b() {
       return this.$refs['b-canvas']
     },
@@ -182,8 +189,10 @@ export default {
 
       document.onmousemove = ev => {
         const { x, y } = ev
-        this[key].x = originPointerX + (x - originMouseX)
-        this[key].y = originPointerY + (y - originMouseY)
+        let nX = originPointerX + (x - originMouseX)
+        let nY = originPointerY + (y - originMouseY)
+        this[key].x = fixNumberInRange(nX, 0, this.$c.width)
+        this[key].y = fixNumberInRange(nY, 0, this.$c.height)
         this.draw()
       }
       document.onmouseup = () => {
