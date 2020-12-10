@@ -116,6 +116,9 @@ export default {
     $b() {
       return this.$refs['b-canvas']
     },
+    /**
+     * @returns {CanvasRenderingContext2D}
+     */
     ctx() {
       return this.$c.getContext('2d')
     }

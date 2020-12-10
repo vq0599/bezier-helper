@@ -1,6 +1,10 @@
 import { SPACING, UNIT_WIDTH, STRIPE_COLOR, CURVE_WIDTH, CURVE_COLOR } from "./constants"
 
 /**
+ * @typedef {{ x: number, y: number }} Pointer
+ */
+
+/**
  * 画x、y轴
  * @param {HTMLCanvasElement} $canvas
  */
@@ -62,10 +66,10 @@ export const drawStripe = ($canvas) => {
 /**
  * 画直线
  * @param {CanvasRenderingContext2D} ctx
- * @param {{ x: Number, y: Number }} p1
- * @param {{ x: Number, y: Number }} p2
- * @param {Number} width
- * @param {String} color
+ * @param {Pointer} p1
+ * @param {Pointer} p2
+ * @param {number} width
+ * @param {string} color
  */
 export const drawLine = (ctx, p1, p2, width, color) => {
   ctx.beginPath();
@@ -80,10 +84,10 @@ export const drawLine = (ctx, p1, p2, width, color) => {
 /**
  * 画贝塞尔曲线
  * @param {CanvasRenderingContext2D} ctx
- * @param {{ x: Number, y: Number }} start
- * @param {{ x: Number, y: Number }} ctrl1
- * @param {{ x: Number, y: Number }} ctrl2
- * @param {{ x: Number, y: Number }} end
+ * @param {Pointer} start
+ * @param {Pointer} ctrl1
+ * @param {Pointer} ctrl2
+ * @param {Pointer} end
  */
 export const drawBezierCurve = (ctx, start, ctrl1, ctrl2, end) => {
   ctx.beginPath();

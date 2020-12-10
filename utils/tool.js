@@ -1,7 +1,8 @@
 /**
  * 16进制转rgb/rgba
  * @param {string} hex 16进制颜色
- * @param {number} opacity 透明度
+ * @param {number} [opacity] 透明度
+ * @returns {string}
  */
 export function hexToRgb(hex, opacity) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -21,6 +22,7 @@ export function hexToRgb(hex, opacity) {
  * @param {number} v 目标
  * @param {number} min 最小值
  * @param {number} max 最大值
+ * @returns {number}
  */
 export function fixNumberInRange(v, min, max) {
   if (v < min) {
