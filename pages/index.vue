@@ -1,17 +1,16 @@
 <template>
   <div class="page">
-    <div class="tips">
-      <span>👇️&nbsp;&nbsp;{{ tips[step] }}</span>
-    </div>
     <div class="main">
-      <div class="container">
+      <div class="step-tips">
+        <span>👇️&nbsp;&nbsp;{{ tips[step] }}</span>
+      </div>
+      <div class="canvas-container">
         <canvas
           ref="b-canvas"
           :width="width + spacing"
           :height="height + spacing + 20"
-          class="coordinate"
         />
-        <div class="content">
+        <div class="canvas-content">
           <canvas
             ref="c-canvas"
             :width="width"
@@ -29,7 +28,7 @@
           </template>
         </div>
       </div>
-      <div class="form">
+      <div class="control-form">
         <div
           v-for="p in pointerList"
           :key="p.key"
@@ -46,10 +45,6 @@
             :value="$data[p.key].y"
             @input="onInput($event, p.key, 'y')"
           />
-          <span
-            v-if="!p.visible"
-            class="form-item-tip"
-          >(未绘制)</span>
         </div>
       </div>
     </div>
@@ -210,26 +205,19 @@ export default {
 .page {
   max-width: 1200px;
   margin: 20px auto;
-  .main {
-    display: flex;
-    margin-top: 20px;
-  }
 }
-.container {
+
+.canvas-container {
   display: inline-block;
   position: relative;
-  margin-right: 20px;
-  .content {
+  .canvas-content {
     display: flex;
     position: absolute;
     top: 40px;
     left: 40px;
   }
 }
-.canvas {
-  display: flex;
-  position: relative;
-}
+
 .pointer {
   position: absolute;
   border-radius: 50%;
@@ -253,14 +241,50 @@ export default {
   }
 }
 
-.form {
+.control-form {
   &-item {
     display: flex;
-    margin-bottom: 10px;
     align-items: center;
-    &-tip {
-      font-size: 12px;
-      color: #999;
+    input {
+      margin-right: 5px;
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .main {
+      .step-tips,
+      .control-form {
+        margin-left: 40px;
+      }
+    }
+    .control-form {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .main {
+    display: flex;
+    flex-wrap: wrap;
+    .step-tips {
+      margin-left: 40px;
+      width: 100%;
+    }
+  }
+
+  .control-form {
+    margin-top: 18px;
+    margin-left: 30px;
+    .form-item:nth-child(n+2) {
+      margin-top: 15px;
     }
   }
 }

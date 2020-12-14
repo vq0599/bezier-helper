@@ -48,7 +48,6 @@ input {
   height: 22px;
   border: 1px solid #d9d9d9;
   border-radius: 2px;
-  margin-right: 5px;
   outline: 0;
   transition: all .2s;
   &:disabled {
